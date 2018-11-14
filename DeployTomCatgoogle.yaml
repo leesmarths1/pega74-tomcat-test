@@ -1,0 +1,59 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "tomcat-service"
+  ##namespace: "jx"
+  labels:
+    app: "tomcat"
+spec:
+  ports:
+  - name: "80-to-8080-tcp"
+    protocol: "TCP"
+    port: 80
+    targetPort: 8080
+  selector:
+    app: "tomcat"
+  type: "LoadBalancer"
+  sessionAffinity: ClientIP
+  loadBalancerIP: ""
+#---
+#apiVersion: "autoscaling/v1"
+#kind: "HorizontalPodAutoscaler"
+#metadata:
+ # name: "tomcat-hpa"
+ # labels:
+ #   app: "tomcat"
+#spec:
+ # scaleTargetRef:
+  #  kind: "Deployment"
+  #  name: "tomcat"
+  #  apiVersion: "apps/v1beta1"
+ # minReplicas: 1
+ # maxReplicas: 1
+ # targetCPUUtilizationPercentage: 80
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tomcat
+  #namespace: "jx"
+  labels:
+    app: tomcat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "tomcat"
+  template:
+    metadata:
+      labels:
+        app: tomcat
+        tier: frontend
+    spec:
+      containers:
+      - image: eu.gcr.io/hs-it-pega-sandbox/tomcat-v9jre8-pega7.4:01-01-02
+        name: tomcat
+        ports:
+        - containerPort: 8080
+          name: tomcat
