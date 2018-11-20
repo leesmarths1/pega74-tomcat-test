@@ -86,24 +86,24 @@ spec:
 kind: "StorageClass"
 apiVersion: "storage.k8s.io/v1"
 metadata:
-  name: "faster"
+  name: "faster-west2-a"
   namespace: "pega74"
 provisioner: "kubernetes.io/gce-pd"
 parameters:
   type: "pd-ssd"
-  zone: "europe-west1-b"
+  zone: "europe-west2-a"
 ---  
 apiVersion: v1
 kind: "PersistentVolumeClaim"
 metadata:
-  name: "tomcat-pvc"
+  name: "sql-pega74-pvc"
   namespace: "pega74"
   labels:
-    name: "tomcat-pega74-jre8-frontend"
+    name: "sql-pega74"
   annotations:
-    volume.alpha.kubernetes.io/storage-class: "faster"
+    volume.alpha.kubernetes.io/storage-class: "faster-west2-a"
 spec:
-  storageClassName: "faster"
+  storageClassName: "faster-west2-a"
   accessModes: [ReadWriteOnce]
   resources:
     requests:
